@@ -88,43 +88,13 @@ async function generateImage(params) {
     throw new Error('Prompt is required and must be a string');
   }
 
-  // First, generate the image URL (but don't use the MCP response format)
-  const urlResult = await _generateImageUrlInternal(prompt, options);
+  // Generate the image URL and metadata
+  const result = await _generateImageUrlInternal(prompt, options);
 
-  try {
-    // Fetch the image from the URL
-    const response = await fetch(urlResult.imageUrl);
-
-    if (!response.ok) {
-      throw new Error(`Failed to generate image: ${response.statusText}`);
-    }
-
-    // Get the image data as an ArrayBuffer
-    const imageBuffer = await response.arrayBuffer();
-
-    // Convert the ArrayBuffer to a base64 string
-    const base64Data = Buffer.from(imageBuffer).toString('base64');
-
-    // Determine the mime type from the response headers or default to image/jpeg
-    const contentType = response.headers.get('content-type') || 'image/jpeg';
-
-    const metadata = {
-      prompt: urlResult.prompt,
-      width: urlResult.width,
-      height: urlResult.height,
-      model: urlResult.model,
-      seed: urlResult.seed
-    };
-
-    // Return the response in MCP format
-    return createMCPResponse([
-      createImageContent(base64Data, contentType),
-      createTextContent(`Generated image from prompt: "${prompt}"\n\nImage metadata: ${JSON.stringify(metadata, null, 2)}`)
-    ]);
-  } catch (error) {
-    console.error('Error generating image:', error);
-    throw error;
-  }
+  // Return the response in MCP format
+  return createMCPResponse([
+    createTextContent(result, true)
+  ]);
 }
 
 /**
@@ -175,7 +145,7 @@ export const imageTools = [
   
   [
     'generateImage',
-    'Generate an image and return the base64-encoded data',
+    'Generate an image from a text prompt',
     {
       prompt: z.string().describe('The text description of the image to generate'),
       options: z.object({

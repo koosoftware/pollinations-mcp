@@ -24,11 +24,11 @@ const toolDefinitions = [
   ...imageTools,
 
   // Text tools
-  ...textTools,
+  //...textTools,
 
   // Audio tools
-  ...audioTools,
-  ...authTools,
+  //...audioTools,
+  //...authTools,
   // Resource tools
   // ...resourceTools
 ];
