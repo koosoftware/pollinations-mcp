@@ -21,8 +21,8 @@ async function _generateImageUrlInternal(prompt, options = {}) {
   const {
     model,
     seed,
-    width = 1024,
-    height = 1024,
+    width = 840,
+    height = 840,
   } = options;
 
   // Construct the URL with query parameters
@@ -34,12 +34,10 @@ async function _generateImageUrlInternal(prompt, options = {}) {
 
   // Return the URL with metadata
   return {
-    imageUrl: url,
+    image: `![Generated Image](${url})`,
     prompt,
     width,
-    height,
-    model,
-    seed
+    height
   };
 }
 
