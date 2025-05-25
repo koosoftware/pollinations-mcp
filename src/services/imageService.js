@@ -28,7 +28,7 @@ async function _generateImageUrlInternal(prompt, options = {}) {
   // Construct the URL with query parameters
   const encodedPrompt = encodeURIComponent(prompt);
   const path = `prompt/${encodedPrompt}`;
-  const queryParams = { model, seed, width, height };
+  const queryParams = { model, seed, width, height, nologo: true };
 
   const url = buildUrl(IMAGE_API_BASE_URL, path, queryParams);
 
